@@ -12,3 +12,70 @@
 # 추가 설치: chakral. react-router-dom
 
 #  App.tsx, index.tsx, react-app-env.d.ts 를 제외하고 전부 삭제.
+
+# Chakra UI 설치. (https://chakra-ui.com/getting-started) 
+  설치가 끝나면 어플리케이션의 index.tsx로 가서 Chakra Proviedr로 App을 감싼다.
+  import { ChakraProvider } from "@chakra-ui/react";
+  <React.StrictMode>
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
+  </React.StrictMode>
+  Provider를 사용한 이유는, 바로 chakra에 특정 설정을 할 수 있기 때문이야.
+  커스텀할 수 있는 테마가 있거든. 그러한 테마와 구성을 모든 컴포넌트에 전달하는 가장 좋은 방식이 Provider를 생성하는 거야.
+
+# Provider로 어플리케이션을 감싸게 되면, Provider는 자동으로 자신의 모든 children 내부에 모든 설정과 구성 사항들을 포함시킬 거야.
+
+# import { Text } from "@chakra-ui/react";
+  <Text color={"red.500"} fontSize={"6xl"}>
+
+# 브라우저 탐색 표시줄에 나타날 URL을 리액트-라우터에게 설명하는 작업.
+  그리고 해당 URL에 위치할 때 유저에게 보여줄 컴포넌트를 선택해야 한다.
+
+# import { createBrowserRouter } from "react-router-dom";
+  const router = createBrowserRouter([{}]);
+  첫번째로 만들어볼 라우터는 루트경로야.
+
+# react-router-dom의 동작 방식은 알다시피, 유저가 브라우저에 작성한 URL을 보는거야.
+  그 다음, 라우터로 이동해서 해당 URL의 라우터가 있는지 확인하고 그런 다음, 보여주고 싶은 컴포넌트를 보여준다.
+
+# 우린 Root 컴포넌트를 만들거야. 이 컴포넌트는 우리 앱의 모든 화면의 아버지가 될 거야.
+  예를 들어, 루트 컴포넌트에 어플리케이션의 header와 footer를 두는거지.
+  그런 다음 가운데에 Rooms 컴포넌트를 두는거야.
+
+# 여전히 루트 컴포넌트를 렌더링해서 상단에는 header를, 하단에는 footer를 보여주고
+  중간에서 Users 컴포넌트를 렌더링할 거야.
+
+# 즉, 우리는 항상 루트 컴포넌트를 렌더링하는 거야.
+  페이지가 /rooms, /users, /contact 인지에 따라 루트 컴포넌트가 중간에 어떤 것을 렌더링하는지가 변화하는 거야.
+
+# 원하는 것은 Root 내부의 중앙에 Home이나 Users를 보여주는 거다.
+  위 쪽에 header를 보여주고 footer도 보여주지만 중앙엔 Users나 Home을 보여주는 거다.
+
+# Root로 가서, Outlet 이라는 컴포넌트를 import 할거야.
+  Outlet이 하는 일은 루트의 중앙에 우리가 렌더링 하고싶은 컴포넌트를 위치시키는 거야.
+
+# errorElement: 에러페이지 관련.
+
+# children: 상위를 실행하면서 추가적으로 경로에 따른 랜더링 대신 Outlet 을 Import 해줘야 한다.
+
+# Chakra를 이용하면 기본으로 다크모드를 만들 수 있어서 좋아.
+  Chakra로 반응형 디자인도 만들 거고, 로딩 상태를 이용해서 우리 어플리케이션의 완성도를 얼마나
+  멋지게 끌어올릴 수 있는지도 보게 될거야.
+
+# Box는 Chakra에서 가장 기본적인 컴포넌트이다. 아무것도 없는 div랑 동일하다.
+ 
+# 아이콘을 써야 하니까, 내가 멋진 패키지를 하나 소개해 줄게. React Icons라는 패키지이다.
+
+# npm install react-icons --save
+
+# npm i @choc-ui/chakra-autocomplete : Chakra 자동 Import가 되지 않을경우.
+
+# 다크 모드 기능을 쓰려면, 우리가 쓰고 있는 Chakra 테마를 구성해야 한다.
+  왜냐하면 이제 기본값을 정해야 한다. 기본 테마가 뭐가 될 건지 결정해야 한다.
+  기본값으로 다크 모드를 쓸까? 아니면 라이트 모드로 할까?
+  그리고 그 다음에 정해야 할 것은, 운영체게의 테마에 맟춰 적용할지를 정해야 한다.
+  왜냐하면, 만약 누군가가 우리 웹사이트를 방문했을 때, 웹사이트는 그 컴퓨터가 다크 모드를 쓰는지
+  확인해서 만약 그렇다면, 웹사이트의 기본값은 다크 모드가 된다.
+  그러니까 우리는 사용자의 컴퓨터 설정을 자동으로 따라갈지 아니면 우리 웹 사이트만의 기본값을 둔 다음,
+  사용자가 직접 '달' 아이콘을 클릭해야만 다크 모드를 쓸 수 있도록 할지 선택해야 한다.
