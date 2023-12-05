@@ -79,3 +79,114 @@
   확인해서 만약 그렇다면, 웹사이트의 기본값은 다크 모드가 된다.
   그러니까 우리는 사용자의 컴퓨터 설정을 자동으로 따라갈지 아니면 우리 웹 사이트만의 기본값을 둔 다음,
   사용자가 직접 '달' 아이콘을 클릭해야만 다크 모드를 쓸 수 있도록 할지 선택해야 한다.
+
+# Skeleton은 로딩 애니메이션을 가진 컴포넌트이다.
+
+# CORS 에러란, 기본적으로 여러분의 서버가 사용자들에게 서버로부터 무언가를 fetch하는 것을 허용하지 않는다는
+  의미야.
+
+# 왜냐면 서버가 fetch하려는 사람들을 서버로부터 차단하고 있거든, 우리들은 Google로부터 fetch를 할 수 없어.
+  Google은 우리가 Google 서버로부터 fetch하는 걸 허용하지 않으니까!
+  그런 것처럼, 우리 Airbnb 클론코딩 서버도 자기 자신으로부터 fetch하는 것을 허용하지 않고 있어
+  그러니까 우리는, 우리 서버가 몇몇 URL을 fetch하는 걸 허용하도록 해야한다.
+
+# 그러려면 먼저, django-cors-headers를 설치해야 한다.
+  cors-headers는, 특정 도메인에서 여러분의 서버에서 브라우저로 fetch할 수 있는 사람'을 지정할 수 있게 해준다.
+  일단은, 로컬 호스트 도메인만 fetch 할 수 있도록 허용시켜 보자.
+
+# 만약 애플리케이션을 배포하고 .com이라는 도메인을 구입했다면, 그 도메인을 허용된 서버에 집어넣어야겠지?
+  그게 바로 지금 우리가 할 일이야.
+
+# pip install django-cors-headers
+
+# config 폴더의 settings.py로 이동해서 INSTALLED_APPS 에 "corsheadrs" 를 추가한다.
+  MIDDLEWARE에도 corsheaders를 추가해야 한다.
+  "corsheaders.middleware.CorsMiddleware",
+  CORS_ALLOWED_ORIGINS = ["http://localhost:3000/"]
+
+# TanStack Query 는 원래 react query였는데 이름이 변경된것이다.
+  npm i @tanstack/react-query
+  설치 후 index.tsx로 가서, QueryClient를 import 하고
+  import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+  const client = new QueryClient();
+
+  const root = ReactDOM.createRoot(
+      document.getElementById("root") as HTMLElement
+  );
+  root.render(
+      <React.StrictMode>
+          <QueryClientProvider client={client}>
+              <ChakraProvider theme={theme}>
+                  <ColorModeScript
+                      initialColorMode={theme.config.initialColorMode}
+                  />
+                  <RouterProvider router={router} />
+              </ChakraProvider>
+          </QueryClientProvider>
+      </React.StrictMode>
+  );
+
+# 코드를 줄여주는 거 외에도, React Query는 캐싱을 해줄거야.
+  캐싱이 무슨 뜻이냐면, 일단 내가 404페이지로 간다고 하자. 내가 돌아가려고 하면, 짧은 로딩이 필요해.
+  이런일은 내가 이 화면을 벗어날 때마다 일어나는데 왜냐면 여기 있는 State가 매번 날아가버리기 때문이야.
+  내가 이 화면으로 돌아올 때마다, fetch를 또 다시 해줘야 해.
+  하지만 React Query를 쓴다면, 그게 우리가 fetch했던 모든 걸 기억해 줄 거야.
+  내가 다른 페이지로 다녀와도, 다시 fetch하는 일은 없을 거야
+  왜냐면 React Query가 여러분이 fetch한 모든 것을 기억하고, 우리가 몇 초 전에 fetch했던 걸 그대로 보여줄
+  뿐이거든, 물론, 원한다면 새로고침을 할 수도 있겠지
+
+# React Query의 장점은, 이 코드를 없애는 것 말고도 여러분이 API로부터 fetch한 모든 데이터를 캐싱한다는 거야.
+
+# src/api.ts 여기에는 우리가 API를 fetch하기 위해 적었던 모든 함수들을 가져올 거야.
+
+# api.tsx
+  const BASE_URL = "http://127.0.0.1:8000/api/v1";
+
+  export async function getRooms() {
+      const response = await fetch(`${BASE_URL}/rooms/`);
+      const json = await response.json();
+      return json;
+  }
+# Home.tsx
+  const { isLoading, data } = useQuery<IRoom[]>({
+        queryKey: ["rooms"],
+        queryFn: getRooms,
+  });
+
+# axios는 fetch를 하는 adapter 같은 거야. 
+  npm i axios
+  이제 await fetch, response, json을 전부 할 필요가 없어
+  axios.get 하고 그러면 여기로 request를 보낼 수 있고,
+  그리고 axios는 내부적으로, fetch나 이것저것 등등을 써서
+  json을 await 하는 것도 가능해.
+
+# const instance = axios.create({
+      baseURL: "http://127.0.0.1:8000/api/v1/",
+  });
+  export async function getRooms() {
+      // const response = await fetch(`${BASE_URL}/rooms/`);
+      // const json = await response.json();
+      // return json;
+
+      const response = await instance.get(`rooms/`);
+
+      return response.data;
+  }
+
+# TanStack Query의 Devtools라는 걸 설치해 볼것이다.
+  그러면 Query가 어떻게 작동하고, 저장되는지 확인 할 수 있다.
+  npm i @tanstack/react-query-devtools
+  import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+  export default function Root() {
+      return (
+          <Box>
+              <Headers />
+              <Outlet />
+              <ReactQueryDevtools />
+          </Box>
+      );
+  }
+
+# 이제 우리 변수를 fetch함수로 보내는 방법에 대해 이야기 해보자.
+  지금 getRoom함수는 그 어떤 파라미터도 받고 있지 않아.

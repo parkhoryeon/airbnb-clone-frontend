@@ -1,68 +1,58 @@
-import {
-    Box,
-    Button,
-    Grid,
-    HStack,
-    Heading,
-    Image,
-    Text,
-    VStack,
-} from "@chakra-ui/react";
-import { FaStar, FaRegHeart } from "react-icons/fa6";
+import { Grid, Skeleton, SkeletonText, Box } from "@chakra-ui/react";
+import Room from "../components/Room";
+import { useQuery } from "@tanstack/react-query";
+import RoomSkeleton from "../components/RoomSkeleton";
+import { getRooms } from "../api";
+import { IRoomList } from "../type";
 
 export default function Home() {
+    const { isLoading, data } = useQuery<IRoomList[]>({
+        queryKey: ["rooms"],
+        queryFn: getRooms,
+    });
+    // const { isLoading, data } = useQuery<IRoom[]>(["rooms"], getRooms);
     return (
         <Grid
             mt={10}
-            px={40}
+            px={{
+                base: 10,
+                lg: 40,
+            }}
             columnGap={4}
             rowGap={8}
-            templateColumns={"repeat(5, 1fr)"}
+            templateColumns={{
+                sm: "1fr",
+                md: "1fr 1fr",
+                lg: "repeat(3, 1fr)",
+                xl: "repeat(4, 1fr)",
+                "2xl": "repeat(5, 1fr)",
+            }}
         >
-            {[
-                1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3,
-                4, 5, 6, 1, 2, 3, 4, 5, 6,
-            ].map((index) => (
-                <VStack key={index} alignItems={"flex-start"}>
-                    <Box
-                        position={"relative"}
-                        mb={3}
-                        overflow={"hidden"}
-                        rounded={"3xl"}
-                    >
-                        <Image
-                            h="280"
-                            src="https://a0.muscache.com/im/pictures/e2bcb474-9938-47b0-a417-c4a02fd0532a.jpg?im_w=720"
-                        />
-                        <Button
-                            variant={"unstyled"}
-                            position={"absolute"}
-                            top={0}
-                            right={0}
-                            color={"white"}
-                        >
-                            <FaRegHeart fontSize={"15px"} />
-                        </Button>
-                    </Box>
-                    <Box>
-                        <Grid gap={2} templateColumns={"6fr 1fr"}>
-                            <Text as={"b"} noOfLines={1} fontSize={"md"}>
-                                Cheomdangwahak-ro, Jeongeup-si, North Jeolla
-                                Province, South Korea
-                            </Text>
-                            <HStack spacing={1}>
-                                <FaStar size={15} />
-                                <Text>5.0</Text>
-                            </HStack>
-                        </Grid>
-                        <Text fontSize={"sm"} color={"gray.600"}>
-                            Seoul, S.Korea
-                        </Text>
-                    </Box>
-                    <Text fontSize={"sm"} color={"gray.600"}>
-                        <Text as={"b"}>$72</Text> / night
-                    </Text>
-                </VStack>
+            {isLoading ? (
+                <>
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                    <RoomSkeleton />
+                </>
+            ) : null}
+            {data?.map((room) => (
+                <Room
+                    key={room.pk}
+                    pk={room.pk}
+                    imageUrl={room.photo_set[0].file}
+                    name={room.name}
+                    rating={room.rating}
+                    city={room.city}
+                    country={room.country}
+                    price={room.price}
+                />
             ))}
         </Grid>
     );
