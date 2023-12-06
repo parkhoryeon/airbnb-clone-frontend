@@ -190,3 +190,22 @@
 
 # 이제 우리 변수를 fetch함수로 보내는 방법에 대해 이야기 해보자.
   지금 getRoom함수는 그 어떤 파라미터도 받고 있지 않아.
+
+
+
+
+# ####################################
+
+# 우선 만들고 싶은 것은, header에서 authentication을 알 수 있으면 좋겠어.
+  그래서 Hook을 만들어서 로그인 여부를 알려주고,
+  로그인이 되었다면 로그인 버튼과 가입 버튼을 보여주지 않는 대신, 현재 로그인 되어있는 user의 아바타를 보여줄거야.
+
+# react Query는 fetch에 실패를 하더라도 여러 번 재시도를 하게 되어 있다.
+  
+# backend에 post 요청을 보낼 때마다 요청 headers에 CSRF Token을 넣어서 보내 줄거다.
+  이 뜻은 CSRF cookie를 axios에 넣어주어야 한다는 의미이다.
+
+# 그래서 js cookie 라는 걸 설치할 거야.
+  js cookie는 cookie를 설정하고 얻을 수 있는 간단한 utility 야.
+  npm i js-cookie
+  npm i --save-dev @types/js-cookie
