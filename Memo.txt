@@ -209,3 +209,16 @@
   js cookie는 cookie를 설정하고 얻을 수 있는 간단한 utility 야.
   npm i js-cookie
   npm i --save-dev @types/js-cookie
+
+
+
+
+
+# React Hook Form은 진짜 엄청난 라이브러리이다.
+  npm i react-hook-form
+  import { useForm } from "react-hook-form";
+  첫 번째로 register라는 함수를 가져올 거야
+  이건 form에 input을 register(등록) 하는데 사용해
+  React hook form은 페이지에 어떤 input이 있는지 몰라
+  그래서 우리가 input이 어떤건지, 어디에 있는지를 알려줘야 한다.
+  
